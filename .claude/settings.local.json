@@ -1,0 +1,22 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npx create-next-app@14 . --typescript --tailwind --eslint --app --no-src-dir --import-alias \"@/*\" --yes)",
+      "Read(//c/Users/pome_/**)",
+      "Bash(npx create-next-app@14 netapp-tmp --typescript --tailwind --eslint --app --no-src-dir --import-alias \"@/*\" --yes)",
+      "Bash(cp /c/Users/pome_/netapp-tmp/tsconfig.json /c/Users/pome_/netapp/tsconfig.json)",
+      "Bash(cp /c/Users/pome_/netapp-tmp/postcss.config.mjs /c/Users/pome_/netapp/postcss.config.mjs)",
+      "Bash(cp /c/Users/pome_/netapp-tmp/tailwind.config.ts /c/Users/pome_/netapp/tailwind.config.ts)",
+      "Bash(cp /c/Users/pome_/netapp-tmp/next-env.d.ts /c/Users/pome_/netapp/next-env.d.ts)",
+      "Bash(cp /c/Users/pome_/netapp-tmp/.eslintrc.json /c/Users/pome_/netapp/.eslintrc.json)",
+      "Bash(cp -r /c/Users/pome_/netapp-tmp/app/. /c/Users/pome_/netapp/app/)",
+      "Bash(cp -r /c/Users/pome_/netapp-tmp/public/. /c/Users/pome_/netapp/public/)",
+      "Bash(npm install:*)",
+      "Bash(npm run:*)",
+      "Bash(ls /c/Users/pome_/netapp/app/\\\\\\(app\\\\\\)/contacts)",
+      "Bash(ls /c/Users/pome_/netapp/app/\\\\\\(app\\\\\\)/scan)",
+      "Bash(ls /c/Users/pome_/netapp/app/\\\\\\(app\\\\\\)/explore)",
+      "Bash(ls /c/Users/pome_/netapp/app/\\\\\\(app\\\\\\))"
+    ]
+  }
+}

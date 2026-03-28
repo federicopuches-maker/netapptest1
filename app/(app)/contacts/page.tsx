@@ -14,7 +14,8 @@ export default async function ContactsPage() {
     .eq("owner_id", user!.id)
     .order("saved_at", { ascending: false });
 
-  const contacts: ContactWithCard[] = (rows ?? []).map((row: any) => ({
+  type Row = { id: string; card_id: string; saved_at: string; cards: { name: string; job_title: string; company: string; slug: string; profiles: { username: string } | null } | null };
+  const contacts: ContactWithCard[] = ((rows ?? []) as Row[]).map((row) => ({
     id: row.id,
     card_id: row.card_id,
     saved_at: row.saved_at,

@@ -15,7 +15,7 @@ export default async function ContactsPage() {
     .order("saved_at", { ascending: false });
 
   type Row = { id: string; card_id: string; saved_at: string; cards: { name: string; job_title: string; company: string; slug: string; profiles: { username: string } | null } | null };
-  const contacts: ContactWithCard[] = ((rows ?? []) as Row[]).map((row) => ({
+  const contacts: ContactWithCard[] = ((rows ?? []) as unknown as Row[]).map((row) => ({
     id: row.id,
     card_id: row.card_id,
     saved_at: row.saved_at,

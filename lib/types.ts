@@ -28,6 +28,7 @@ export interface ContactWithCard {
   company: string;
   slug: string;
   username: string;
+  photo_url: string | null;
 }
 
 export interface Card {

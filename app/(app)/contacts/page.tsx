@@ -10,7 +10,7 @@ export default async function ContactsPage() {
 
   const { data: rows } = await supabase
     .from("contacts")
-    .select(`id, card_id, saved_at, notes, tags, where_met, cards ( name, job_title, company, slug, profiles ( username ) )`)
+    .select(`id, card_id, saved_at, notes, tags, where_met, cards ( name, job_title, company, slug, photo_url, profiles ( username ) )`)
     .eq("owner_id", user!.id)
     .order("saved_at", { ascending: false });
 
@@ -26,6 +26,7 @@ export default async function ContactsPage() {
       job_title: string;
       company: string;
       slug: string;
+      photo_url: string | null;
       profiles: { username: string } | null;
     } | null;
   };
@@ -42,6 +43,7 @@ export default async function ContactsPage() {
     company: row.cards?.company ?? "",
     slug: row.cards?.slug ?? "",
     username: row.cards?.profiles?.username ?? "",
+    photo_url: row.cards?.photo_url ?? null,
   }));
 
   return (

@@ -37,6 +37,7 @@ export interface Card {
   linkedin_url: string;
   created_at: string;
   updated_at: string;
+  is_favorite: boolean;
 }
 
 export interface CardFormValues {

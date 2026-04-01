@@ -11,12 +11,18 @@ export interface Contact {
   owner_id: string;
   card_id: string;
   saved_at: string;
+  notes: string | null;
+  tags: string[];
+  where_met: string | null;
 }
 
 export interface ContactWithCard {
   id: string;
   card_id: string;
   saved_at: string;
+  notes: string | null;
+  tags: string[];
+  where_met: string | null;
   name: string;
   job_title: string;
   company: string;

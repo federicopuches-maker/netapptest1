@@ -138,7 +138,7 @@ export default function ContactDetailPage({ params }: PageProps) {
         )}
       </div>
 
-      <div className="p-4 flex flex-col gap-5 pb-28">
+      <div className="p-4 flex flex-col gap-5 pb-40">
         {/* Card visual */}
         <BusinessCardVisual card={detail.card} />
 

@@ -10,12 +10,8 @@ interface BusinessCardVisualProps {
 }
 
 function getInitials(name: string): string {
-  return name
-    .trim()
-    .split(/\s+/)
-    .slice(0, 2)
-    .map((p) => p[0]?.toUpperCase() ?? "")
-    .join("");
+  return name.trim().split(/\s+/).slice(0, 2)
+    .map((p) => p[0]?.toUpperCase() ?? "").join("");
 }
 
 export function BusinessCardVisual({ card, compact = false }: BusinessCardVisualProps) {
@@ -23,7 +19,6 @@ export function BusinessCardVisual({ card, compact = false }: BusinessCardVisual
   const [logoError, setLogoError] = useState(false);
 
   const initials = getInitials(card.name);
-  const subtitle = [card.job_title, card.company].filter(Boolean).join(" · ");
   const contacts = [
     { key: "email", value: card.email, Icon: Mail },
     { key: "phone", value: card.phone, Icon: Phone },
@@ -35,25 +30,14 @@ export function BusinessCardVisual({ card, compact = false }: BusinessCardVisual
 
   return (
     <div className="border border-black/10 rounded-xl overflow-hidden">
-      {/* Banner with optional logo */}
-      <div className={`bg-accent relative ${compact ? "h-10" : "h-16"}`}>
-        {showLogo && (
-          <div className="absolute top-2 right-2 w-8 h-8 rounded bg-white/90 overflow-hidden flex items-center justify-center">
-            <img
-              src={card.logo_url!}
-              alt="Company logo"
-              className="w-full h-full object-contain p-0.5"
-              onError={() => setLogoError(true)}
-            />
-          </div>
-        )}
-      </div>
+      {/* Accent banner — thin strip, edit/star buttons overlay here */}
+      <div className={`bg-accent ${compact ? "h-10" : "h-12"}`} />
 
-      {/* Avatar overlapping banner */}
-      <div className={`flex justify-center ${compact ? "-mt-5 mb-2" : "-mt-8 mb-3"}`}>
+      {/* Profile photo — sits below banner, no overlap */}
+      <div className="flex justify-center pt-4 mb-3">
         <div
           className={`rounded-full bg-white border-2 border-black/10 overflow-hidden flex items-center justify-center ${
-            compact ? "w-10 h-10" : "w-16 h-16"
+            compact ? "w-14 h-14" : "w-20 h-20"
           }`}
         >
           {showPhoto ? (
@@ -65,7 +49,7 @@ export function BusinessCardVisual({ card, compact = false }: BusinessCardVisual
             />
           ) : (
             <span
-              className={`text-accent font-semibold ${compact ? "text-sm" : "text-lg"}`}
+              className={`text-accent font-semibold ${compact ? "text-base" : "text-xl"}`}
             >
               {initials}
             </span>
@@ -76,10 +60,27 @@ export function BusinessCardVisual({ card, compact = false }: BusinessCardVisual
       {/* Identity */}
       <div className={`text-center px-4 ${compact ? "pb-2" : "pb-4"}`}>
         <p className={`font-semibold ${compact ? "text-sm" : "text-base"}`}>{card.name}</p>
-        {subtitle && (
+        {card.job_title && (
           <p className={`text-black/50 mt-0.5 ${compact ? "text-xs" : "text-sm"}`}>
-            {subtitle}
+            {card.job_title}
           </p>
+        )}
+        {card.company && (
+          <div className="flex items-center justify-center gap-1.5 mt-0.5">
+            <p className={`text-black/50 ${compact ? "text-xs" : "text-sm"}`}>
+              {card.company}
+            </p>
+            {showLogo && (
+              <div className="w-4 h-4 rounded overflow-hidden flex-shrink-0">
+                <img
+                  src={card.logo_url!}
+                  alt="logo"
+                  className="w-full h-full object-contain"
+                  onError={() => setLogoError(true)}
+                />
+              </div>
+            )}
+          </div>
         )}
       </div>
 

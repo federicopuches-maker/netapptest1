@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { ArrowLeft, X, ExternalLink } from "lucide-react";
 import { BusinessCardVisual } from "@/components/cards/business-card-visual";
@@ -23,6 +24,7 @@ interface PageProps {
 
 export default function ContactDetailPage({ params }: PageProps) {
   const { user } = useAuth();
+  const router = useRouter();
   const [detail, setDetail] = useState<ContactDetail | null>(null);
   const [loading, setLoading] = useState(true);
   const [notes, setNotes] = useState("");
@@ -73,8 +75,12 @@ export default function ContactDetailPage({ params }: PageProps) {
       .from("contacts")
       .update({ notes, where_met: whereMet, tags })
       .eq("id", detail.id);
-    if (error) setSaveError(error.message);
-    setSaving(false);
+    if (error) {
+      setSaveError(error.message);
+      setSaving(false);
+    } else {
+      router.push("/contacts");
+    }
   };
 
   const addTag = (value: string) => {

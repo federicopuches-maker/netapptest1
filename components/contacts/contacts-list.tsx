@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Search } from "lucide-react";
+import { Search, X } from "lucide-react";
 import { ContactListItem } from "@/components/cards/contact-list-item";
 import type { ContactWithCard } from "@/lib/types";
 
@@ -40,12 +40,17 @@ export function ContactsList({ contacts }: ContactsListProps) {
         <div className="flex items-center gap-2 border border-black/20 rounded-lg px-3 py-2">
           <Search size={14} className="text-black/30 shrink-0" strokeWidth={1.5} />
           <input
-            type="search"
+            type="text"
             placeholder="Search by name or tag…"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             className="flex-1 text-sm outline-none bg-transparent placeholder:text-black/30"
           />
+          {query && (
+            <button onClick={() => setQuery("")} aria-label="Clear search">
+              <X size={14} className="text-black/30" strokeWidth={1.5} />
+            </button>
+          )}
         </div>
       </div>
 

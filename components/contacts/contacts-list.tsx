@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { Search, X } from "lucide-react";
 import { ContactListItem } from "@/components/cards/contact-list-item";
 import type { ContactWithCard } from "@/lib/types";
@@ -11,16 +11,27 @@ interface ContactsListProps {
 
 export function ContactsList({ contacts }: ContactsListProps) {
   const [query, setQuery] = useState("");
+  const [activeTag, setActiveTag] = useState<string | null>(null);
 
-  const filtered = query.trim()
-    ? contacts.filter((c) => {
+  const allTags = useMemo(() => {
+    const set = new Set<string>();
+    contacts.forEach((c) => c.tags.forEach((t) => set.add(t)));
+    return Array.from(set).sort();
+  }, [contacts]);
+
+  const filtered = useMemo(() => {
+    return contacts.filter((c) => {
+      const matchesTag = !activeTag || c.tags.includes(activeTag);
+      const matchesQuery = !query.trim() || (() => {
         const q = query.toLowerCase();
         return (
           c.name.toLowerCase().includes(q) ||
           c.tags.some((t) => t.toLowerCase().includes(q))
         );
-      })
-    : contacts;
+      })();
+      return matchesTag && matchesQuery;
+    });
+  }, [contacts, query, activeTag]);
 
   if (contacts.length === 0) {
     return (
@@ -36,7 +47,7 @@ export function ContactsList({ contacts }: ContactsListProps) {
   return (
     <div className="flex flex-col">
       {/* Search bar */}
-      <div className="px-4 py-3 border-b border-black/10">
+      <div className="px-4 pt-3 pb-2 border-b border-black/10">
         <div className="flex items-center gap-2 border border-black/20 rounded-lg px-3 py-2">
           <Search size={14} className="text-black/30 shrink-0" strokeWidth={1.5} />
           <input
@@ -52,10 +63,32 @@ export function ContactsList({ contacts }: ContactsListProps) {
             </button>
           )}
         </div>
+
+        {/* Tag filter pills */}
+        {allTags.length > 0 && (
+          <div
+            className="flex gap-2 mt-2 overflow-x-auto"
+            style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+          >
+            {allTags.map((tag) => (
+              <button
+                key={tag}
+                onClick={() => setActiveTag(activeTag === tag ? null : tag)}
+                className={`shrink-0 text-xs font-medium px-3 py-1 rounded-full border transition-colors ${
+                  activeTag === tag
+                    ? "bg-accent text-white border-accent"
+                    : "text-accent bg-accent/10 border-transparent"
+                }`}
+              >
+                {tag}
+              </button>
+            ))}
+          </div>
+        )}
       </div>
 
       {filtered.length === 0 ? (
-        <p className="text-sm text-black/40 text-center py-12">No results for &ldquo;{query}&rdquo;</p>
+        <p className="text-sm text-black/40 text-center py-12">No results</p>
       ) : (
         <div className="divide-y divide-black/10">
           {filtered.map((c) => (

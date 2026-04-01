@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState, useCallback } from "react";
 import Link from "next/link";
-import { Star } from "lucide-react";
+import { Star, Pencil } from "lucide-react";
 import { QRCodeSVG } from "qrcode.react";
 import { BusinessCardVisual } from "@/components/cards/business-card-visual";
 import { createClient } from "@/lib/supabase/client";
@@ -146,6 +146,13 @@ export function CardsCarousel({ cards: initialCards, username }: CardsCarouselPr
                     className={card.is_favorite ? "text-accent fill-accent" : "text-black/30"}
                   />
                 </button>
+                <Link
+                  href={`/cards/${card.id}?edit=1`}
+                  aria-label="Edit card"
+                  className="absolute top-2 left-2 p-1.5 rounded-full bg-white/80"
+                >
+                  <Pencil size={14} strokeWidth={1.5} className="text-black/40" />
+                </Link>
               </div>
 
               {/* QR code */}

@@ -22,6 +22,11 @@ export default function CardDetailPage({ params }: PageProps) {
   const [card, setCard] = useState<Card | null>(null);
   const [username, setUsername] = useState<string>("");
   const [isEditing, setIsEditing] = useState(false);
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("edit") === "1") setIsEditing(true);
+  }, []);
   const [showShare, setShowShare] = useState(false);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);

@@ -25,23 +25,40 @@ export function ImageUploadField({
   const { user } = useAuth();
   const inputRef = useRef<HTMLInputElement>(null);
   const [uploading, setUploading] = useState(false);
+  const [uploadError, setUploadError] = useState<string | null>(null);
 
   const handleFile = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file || !user) return;
     setUploading(true);
+    setUploadError(null);
 
     const supabase = createClient();
-    const path = `${user.id}/${cardId}/${field === "photo_url" ? "photo" : "logo"}`;
+    const filename = field === "photo_url" ? "photo" : "logo";
+    const path = `${user.id}/${cardId}/${filename}`;
 
-    const { error } = await supabase.storage
+    const { error: uploadErr } = await supabase.storage
       .from("card-assets")
-      .upload(path, file, { upsert: true, contentType: file.type });
+      .upload(path, file, { upsert: true });
 
-    if (!error) {
-      const { data } = supabase.storage.from("card-assets").getPublicUrl(path);
-      const url = `${data.publicUrl}?t=${Date.now()}`;
-      await supabase.from("cards").update({ [field]: url }).eq("id", cardId);
+    if (uploadErr) {
+      setUploadError(uploadErr.message);
+      setUploading(false);
+      e.target.value = "";
+      return;
+    }
+
+    const { data } = supabase.storage.from("card-assets").getPublicUrl(path);
+    const url = `${data.publicUrl}?t=${Date.now()}`;
+
+    const { error: dbErr } = await supabase
+      .from("cards")
+      .update({ [field]: url })
+      .eq("id", cardId);
+
+    if (dbErr) {
+      setUploadError(dbErr.message);
+    } else {
       onUploaded(url);
     }
 
@@ -69,6 +86,9 @@ export function ImageUploadField({
       <span className="text-xs text-black/40">
         {uploading ? "Uploading…" : label}
       </span>
+      {uploadError && (
+        <p className="text-xs text-red-500 text-center max-w-[120px]">{uploadError}</p>
+      )}
       <input
         ref={inputRef}
         type="file"

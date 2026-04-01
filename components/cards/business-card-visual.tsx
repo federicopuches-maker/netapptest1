@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { Mail, Phone, ExternalLink } from "lucide-react";
 import type { Card } from "@/lib/types";
 
@@ -18,6 +19,9 @@ function getInitials(name: string): string {
 }
 
 export function BusinessCardVisual({ card, compact = false }: BusinessCardVisualProps) {
+  const [photoError, setPhotoError] = useState(false);
+  const [logoError, setLogoError] = useState(false);
+
   const initials = getInitials(card.name);
   const subtitle = [card.job_title, card.company].filter(Boolean).join(" · ");
   const contacts = [
@@ -26,16 +30,20 @@ export function BusinessCardVisual({ card, compact = false }: BusinessCardVisual
     { key: "linkedin_url", value: card.linkedin_url, Icon: ExternalLink },
   ].filter((c) => !!c.value);
 
+  const showPhoto = !!card.photo_url && !photoError;
+  const showLogo = !!card.logo_url && !logoError;
+
   return (
     <div className="border border-black/10 rounded-xl overflow-hidden">
       {/* Banner with optional logo */}
       <div className={`bg-accent relative ${compact ? "h-10" : "h-16"}`}>
-        {card.logo_url && (
+        {showLogo && (
           <div className="absolute top-2 right-2 w-8 h-8 rounded bg-white/90 overflow-hidden flex items-center justify-center">
             <img
-              src={card.logo_url}
+              src={card.logo_url!}
               alt="Company logo"
               className="w-full h-full object-contain p-0.5"
+              onError={() => setLogoError(true)}
             />
           </div>
         )}
@@ -48,11 +56,12 @@ export function BusinessCardVisual({ card, compact = false }: BusinessCardVisual
             compact ? "w-10 h-10" : "w-16 h-16"
           }`}
         >
-          {card.photo_url ? (
+          {showPhoto ? (
             <img
-              src={card.photo_url}
+              src={card.photo_url!}
               alt={card.name}
               className="w-full h-full object-cover"
+              onError={() => setPhotoError(true)}
             />
           ) : (
             <span

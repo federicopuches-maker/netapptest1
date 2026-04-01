@@ -2,12 +2,13 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { CreditCard, Users, QrCode, Compass } from "lucide-react";
+import { CreditCard, Users, QrCode, Settings, Compass } from "lucide-react";
 
 const navItems = [
   { href: "/cards", label: "Cards", icon: CreditCard },
   { href: "/contacts", label: "Contacts", icon: Users },
   { href: "/scan", label: "Scan", icon: QrCode },
+  { href: "/settings", label: "Settings", icon: Settings },
   { href: "/explore", label: "Explore", icon: Compass },
 ] as const;
 

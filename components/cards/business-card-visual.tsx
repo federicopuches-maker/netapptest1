@@ -5,6 +5,7 @@ import type { Card } from "@/lib/types";
 
 interface BusinessCardVisualProps {
   card: Card;
+  compact?: boolean;
 }
 
 function getInitials(name: string): string {
@@ -16,7 +17,7 @@ function getInitials(name: string): string {
     .join("");
 }
 
-export function BusinessCardVisual({ card }: BusinessCardVisualProps) {
+export function BusinessCardVisual({ card, compact = false }: BusinessCardVisualProps) {
   const initials = getInitials(card.name);
   const subtitle = [card.job_title, card.company].filter(Boolean).join(" · ");
   const contacts = [
@@ -28,28 +29,43 @@ export function BusinessCardVisual({ card }: BusinessCardVisualProps) {
   return (
     <div className="border border-black/10 rounded-xl overflow-hidden">
       {/* Banner */}
-      <div className="bg-accent h-16" />
+      <div className={`bg-accent ${compact ? "h-10" : "h-16"}`} />
 
       {/* Avatar overlapping banner */}
-      <div className="flex justify-center -mt-8 mb-3">
-        <div className="w-16 h-16 rounded-full bg-white border-2 border-black/10 flex items-center justify-center">
-          <span className="text-accent text-lg font-semibold">{initials}</span>
+      <div className={`flex justify-center ${compact ? "-mt-5 mb-2" : "-mt-8 mb-3"}`}>
+        <div
+          className={`rounded-full bg-white border-2 border-black/10 flex items-center justify-center ${
+            compact ? "w-10 h-10" : "w-16 h-16"
+          }`}
+        >
+          <span
+            className={`text-accent font-semibold ${compact ? "text-sm" : "text-lg"}`}
+          >
+            {initials}
+          </span>
         </div>
       </div>
 
       {/* Identity */}
-      <div className="text-center px-4 pb-4">
-        <p className="text-base font-semibold">{card.name}</p>
-        {subtitle && <p className="text-sm text-black/50 mt-0.5">{subtitle}</p>}
+      <div className={`text-center px-4 ${compact ? "pb-2" : "pb-4"}`}>
+        <p className={`font-semibold ${compact ? "text-sm" : "text-base"}`}>{card.name}</p>
+        {subtitle && (
+          <p className={`text-black/50 mt-0.5 ${compact ? "text-xs" : "text-sm"}`}>
+            {subtitle}
+          </p>
+        )}
       </div>
 
       {/* Contact rows */}
       {contacts.length > 0 && (
         <div className="divide-y divide-black/10 border-t border-black/10">
           {contacts.map(({ key, value, Icon }) => (
-            <div key={key} className="flex items-center gap-3 px-4 py-3">
-              <Icon size={16} className="text-black/30 shrink-0" strokeWidth={1.5} />
-              <span className="text-sm break-all">{value}</span>
+            <div
+              key={key}
+              className={`flex items-center gap-3 px-4 ${compact ? "py-2" : "py-3"}`}
+            >
+              <Icon size={14} className="text-black/30 shrink-0" strokeWidth={1.5} />
+              <span className="text-xs break-all">{value}</span>
             </div>
           ))}
         </div>

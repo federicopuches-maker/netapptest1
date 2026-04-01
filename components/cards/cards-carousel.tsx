@@ -99,9 +99,26 @@ export function CardsCarousel({ cards: initialCards, username }: CardsCarouselPr
 
   return (
     <div className="flex flex-col flex-1">
+      {/* Dot indicators — top, larger */}
+      {cards.length > 1 && (
+        <div className="flex items-center justify-center gap-2 pt-4 pb-2">
+          {cards.map((card, i) => (
+            <button
+              key={card.id}
+              onClick={() => scrollToIndex(i)}
+              aria-label={`Go to card ${i + 1}`}
+              className={`h-2 rounded-full transition-all duration-200 ${
+                i === activeIndex ? "w-6 bg-accent" : "w-2 bg-black/20"
+              }`}
+            />
+          ))}
+        </div>
+      )}
+
+      {/* Scroll container */}
       <div
         ref={scrollRef}
-        className="flex overflow-x-scroll snap-x snap-mandatory"
+        className="flex overflow-x-scroll snap-x snap-mandatory flex-1"
         style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
       >
         {cards.map((card) => {
@@ -110,55 +127,40 @@ export function CardsCarousel({ cards: initialCards, username }: CardsCarouselPr
           return (
             <div
               key={card.id}
-              className="snap-center w-full flex-shrink-0 px-4 py-4 flex flex-col gap-4"
+              className="snap-center w-full flex-shrink-0 px-4 pt-2 pb-20 flex flex-col gap-3"
             >
-              <Link href={`/cards/${card.id}`} className="block">
-                <BusinessCardVisual card={card} />
-              </Link>
+              {/* Card visual with star overlay */}
+              <div className="relative">
+                <Link href={`/cards/${card.id}`} className="block">
+                  <BusinessCardVisual card={card} compact />
+                </Link>
+                <button
+                  onClick={() => handleFavoriteToggle(card)}
+                  disabled={!!togglingId}
+                  aria-label={card.is_favorite ? "Remove favorite" : "Set as favorite"}
+                  className="absolute top-2 right-2 p-1.5 rounded-full bg-white/80 disabled:opacity-50"
+                >
+                  <Star
+                    size={14}
+                    strokeWidth={1.5}
+                    className={card.is_favorite ? "text-accent fill-accent" : "text-black/30"}
+                  />
+                </button>
+              </div>
 
+              {/* QR code */}
               {cardUrl && (
-                <div className="flex flex-col items-center gap-3 border border-black/10 rounded-xl py-6">
-                  <QRCodeSVG value={cardUrl} size={160} fgColor="#1a2744" bgColor="#ffffff" />
+                <div className="flex flex-col items-center gap-2 border border-black/10 rounded-xl py-4">
+                  <QRCodeSVG value={cardUrl} size={120} fgColor="#1a2744" bgColor="#ffffff" />
                   <p className="text-xs text-black/40 font-mono px-4 text-center break-all">
                     {cardUrl}
                   </p>
                 </div>
               )}
-
-              <button
-                onClick={() => handleFavoriteToggle(card)}
-                disabled={!!togglingId}
-                aria-label={card.is_favorite ? "Remove favorite" : "Set as favorite"}
-                className="flex items-center justify-center gap-2 w-full py-3 border border-black/10 rounded-xl text-sm font-medium transition-colors disabled:opacity-50"
-              >
-                <Star
-                  size={16}
-                  strokeWidth={1.5}
-                  className={card.is_favorite ? "text-accent fill-accent" : "text-black/30"}
-                />
-                <span className={card.is_favorite ? "text-accent" : "text-black/60"}>
-                  {card.is_favorite ? "Favorited" : "Set as favorite"}
-                </span>
-              </button>
             </div>
           );
         })}
       </div>
-
-      {cards.length > 1 && (
-        <div className="flex items-center justify-center gap-1.5 py-3">
-          {cards.map((card, i) => (
-            <button
-              key={card.id}
-              onClick={() => scrollToIndex(i)}
-              aria-label={`Go to card ${i + 1}`}
-              className={`w-1.5 h-1.5 rounded-full transition-colors ${
-                i === activeIndex ? "bg-accent" : "bg-black/20"
-              }`}
-            />
-          ))}
-        </div>
-      )}
     </div>
   );
 }

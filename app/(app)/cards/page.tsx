@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Plus, Settings } from "lucide-react";
+import { Plus } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { CardsCarousel } from "@/components/cards/cards-carousel";
 import type { Card } from "@/lib/types";
@@ -22,17 +22,6 @@ export default async function CardsPage() {
 
   return (
     <div className="flex flex-col min-h-full">
-      <div className="flex items-center justify-between px-4 h-14 border-b border-black/10">
-        <h1 className="text-base font-semibold">Cards</h1>
-        <Link
-          href="/settings"
-          className="text-black/40 hover:text-black transition-colors"
-          aria-label="Settings"
-        >
-          <Settings size={18} strokeWidth={1.5} />
-        </Link>
-      </div>
-
       <CardsCarousel
         cards={(cards ?? []) as Card[]}
         username={profile?.username ?? ""}

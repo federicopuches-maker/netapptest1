@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { ArrowLeft, X, ExternalLink } from "lucide-react";
-import { BusinessCardVisual } from "@/components/cards/business-card-visual";
+import { CardHeroVisual } from "@/components/cards/card-hero-visual";
 import { useAuth } from "@/contexts/auth-context";
 import { createClient } from "@/lib/supabase/client";
 import type { Card } from "@/lib/types";
@@ -138,9 +138,12 @@ export default function ContactDetailPage({ params }: PageProps) {
         )}
       </div>
 
-      <div className="p-4 flex flex-col gap-5 pb-40">
-        {/* Card visual */}
-        <BusinessCardVisual card={detail.card} />
+      {/* Card hero — full width, no side padding */}
+      <div className="px-4 pt-4">
+        <CardHeroVisual card={detail.card} />
+      </div>
+
+      <div className="px-4 flex flex-col gap-5 pt-5 pb-40">
 
         {/* Where we met */}
         <div className="flex flex-col gap-1.5">

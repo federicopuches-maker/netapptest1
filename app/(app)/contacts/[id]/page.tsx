@@ -30,6 +30,7 @@ export default function ContactDetailPage({ params }: PageProps) {
   const [tags, setTags] = useState<string[]>([]);
   const [tagInput, setTagInput] = useState("");
   const [saving, setSaving] = useState(false);
+  const [saveError, setSaveError] = useState<string | null>(null);
 
   useEffect(() => {
     if (!user) return;
@@ -66,11 +67,13 @@ export default function ContactDetailPage({ params }: PageProps) {
   const handleSave = async () => {
     if (!detail) return;
     setSaving(true);
+    setSaveError(null);
     const supabase = createClient();
-    await supabase
+    const { error } = await supabase
       .from("contacts")
       .update({ notes, where_met: whereMet, tags })
       .eq("id", detail.id);
+    if (error) setSaveError(error.message);
     setSaving(false);
   };
 
@@ -189,6 +192,7 @@ export default function ContactDetailPage({ params }: PageProps) {
         </div>
 
         {/* Save */}
+        {saveError && <p className="text-sm text-red-500">{saveError}</p>}
         <button
           onClick={handleSave}
           disabled={saving}

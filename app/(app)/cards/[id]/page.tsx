@@ -2,9 +2,11 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { ArrowLeft, Pencil, Share2, Mail, Phone, ExternalLink } from "lucide-react";
+import { ArrowLeft, Pencil, Share2 } from "lucide-react";
+import { QRCodeSVG } from "qrcode.react";
 import { CardForm } from "@/components/cards/card-form";
 import { ShareSheet } from "@/components/cards/share-sheet";
+import { BusinessCardVisual } from "@/components/cards/business-card-visual";
 import { useAuth } from "@/contexts/auth-context";
 import { createClient } from "@/lib/supabase/client";
 import { slugify, makeUniqueSlug } from "@/lib/slugify";
@@ -13,15 +15,6 @@ import type { Card, CardFormValues } from "@/lib/types";
 interface PageProps {
   params: { id: string };
 }
-
-const fieldRows: { key: keyof Card; label: string; icon?: React.ElementType }[] = [
-  { key: "name", label: "Name" },
-  { key: "job_title", label: "Job title" },
-  { key: "company", label: "Company" },
-  { key: "email", label: "Email", icon: Mail },
-  { key: "phone", label: "Phone", icon: Phone },
-  { key: "linkedin_url", label: "LinkedIn", icon: ExternalLink },
-];
 
 export default function CardDetailPage({ params }: PageProps) {
   const { user } = useAuth();
@@ -101,6 +94,11 @@ export default function CardDetailPage({ params }: PageProps) {
 
   if (!card) return null;
 
+  const appUrl =
+    process.env.NEXT_PUBLIC_APP_URL ??
+    (typeof window !== "undefined" ? window.location.origin : "");
+  const cardUrl = username && card.slug ? `${appUrl}/card/${username}/${card.slug}` : "";
+
   const formValues: CardFormValues = {
     title: card.title,
     name: card.name,
@@ -129,56 +127,47 @@ export default function CardDetailPage({ params }: PageProps) {
           </button>
         </div>
 
-        <div className="p-4 flex flex-col gap-6">
-          {error && <p className="text-sm text-red-500">{error}</p>}
-
-          {isEditing ? (
+        {isEditing ? (
+          <div className="p-4 flex flex-col gap-6">
+            {error && <p className="text-sm text-red-500">{error}</p>}
             <CardForm
               initialValues={formValues}
               onSubmit={handleSave}
               submitLabel="Save changes"
               loading={saving}
             />
-          ) : (
-            <>
-              {/* Field list */}
-              <div className="divide-y divide-black/10 border border-black/10 rounded-xl overflow-hidden">
-                {fieldRows.map(({ key, label, icon: Icon }) => {
-                  const value = card[key] as string;
-                  if (!value) return null;
-                  return (
-                    <div key={key} className="flex items-start gap-3 px-4 py-3">
-                      {Icon && (
-                        <Icon size={16} className="text-black/30 mt-0.5 shrink-0" strokeWidth={1.5} />
-                      )}
-                      <div className="flex flex-col gap-0.5 min-w-0">
-                        <span className="text-xs text-black/40">{label}</span>
-                        <span className="text-sm break-all">{value}</span>
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
+            <button
+              onClick={handleDelete}
+              className="text-xs text-black/30 hover:text-red-500 transition-colors text-center"
+            >
+              Delete card
+            </button>
+          </div>
+        ) : (
+          <>
+            <div className="p-4 flex flex-col gap-6 pb-28">
+              {/* QR Code */}
+              {cardUrl && (
+                <div className="flex flex-col items-center gap-3 border border-black/10 rounded-xl py-6">
+                  <QRCodeSVG value={cardUrl} size={180} fgColor="#1a2744" bgColor="#ffffff" />
+                  <p className="text-xs text-black/40 font-mono px-4 text-center break-all">{cardUrl}</p>
+                </div>
+              )}
 
-              {/* Share button */}
-              <button
-                onClick={() => setShowShare(true)}
-                className="flex items-center justify-center gap-2 w-full border border-black/20 rounded-md py-2.5 text-sm font-medium hover:bg-black/[0.02] transition-colors"
-              >
-                <Share2 size={16} strokeWidth={1.5} />
-                Share card
-              </button>
+              {/* Business card visual */}
+              <BusinessCardVisual card={card} />
+            </div>
 
-              {/* Delete */}
-              <button
-                onClick={handleDelete}
-                className="text-xs text-black/30 hover:text-red-500 transition-colors text-center"
-              >
-                Delete card
-              </button>
-            </>
-          )}
-        </div>
+            {/* Share button — fixed above bottom nav */}
+            <button
+              onClick={() => setShowShare(true)}
+              className="fixed bottom-20 left-4 right-4 bg-accent text-white text-sm font-semibold py-3 rounded-full flex items-center justify-center gap-2"
+            >
+              <Share2 size={16} strokeWidth={1.5} />
+              Share
+            </button>
+          </>
+        )}
       </div>
 
       {showShare && card && username && (

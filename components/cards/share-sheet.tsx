@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { QRCodeSVG } from "qrcode.react";
 import { Copy, MessageCircle, Mail, X, Check } from "lucide-react";
 import type { Card } from "@/lib/types";
 
@@ -73,15 +72,7 @@ export function ShareSheet({ card, username, onClose }: ShareSheetProps) {
         {/* Drag handle */}
         <div className="w-10 h-1 bg-black/20 rounded-full mx-auto mb-6" />
 
-        <p className="text-sm font-semibold text-center mb-5">{card.title}</p>
-
-        {/* QR Code */}
-        <div className="flex justify-center mb-3">
-          <QRCodeSVG value={url} size={180} fgColor="#1a2744" bgColor="#ffffff" />
-        </div>
-
-        {/* URL */}
-        <p className="text-xs text-black/40 text-center mb-6 font-mono break-all">{url}</p>
+        <p className="text-sm font-semibold text-center mb-6">{card.title}</p>
 
         {/* Actions */}
         <div className="grid grid-cols-4 gap-3">

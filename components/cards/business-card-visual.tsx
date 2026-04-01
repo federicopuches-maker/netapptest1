@@ -28,21 +28,39 @@ export function BusinessCardVisual({ card, compact = false }: BusinessCardVisual
 
   return (
     <div className="border border-black/10 rounded-xl overflow-hidden">
-      {/* Banner */}
-      <div className={`bg-accent ${compact ? "h-10" : "h-16"}`} />
+      {/* Banner with optional logo */}
+      <div className={`bg-accent relative ${compact ? "h-10" : "h-16"}`}>
+        {card.logo_url && (
+          <div className="absolute top-2 right-2 w-8 h-8 rounded bg-white/90 overflow-hidden flex items-center justify-center">
+            <img
+              src={card.logo_url}
+              alt="Company logo"
+              className="w-full h-full object-contain p-0.5"
+            />
+          </div>
+        )}
+      </div>
 
       {/* Avatar overlapping banner */}
       <div className={`flex justify-center ${compact ? "-mt-5 mb-2" : "-mt-8 mb-3"}`}>
         <div
-          className={`rounded-full bg-white border-2 border-black/10 flex items-center justify-center ${
+          className={`rounded-full bg-white border-2 border-black/10 overflow-hidden flex items-center justify-center ${
             compact ? "w-10 h-10" : "w-16 h-16"
           }`}
         >
-          <span
-            className={`text-accent font-semibold ${compact ? "text-sm" : "text-lg"}`}
-          >
-            {initials}
-          </span>
+          {card.photo_url ? (
+            <img
+              src={card.photo_url}
+              alt={card.name}
+              className="w-full h-full object-cover"
+            />
+          ) : (
+            <span
+              className={`text-accent font-semibold ${compact ? "text-sm" : "text-lg"}`}
+            >
+              {initials}
+            </span>
+          )}
         </div>
       </div>
 

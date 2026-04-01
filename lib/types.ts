@@ -38,6 +38,8 @@ export interface Card {
   created_at: string;
   updated_at: string;
   is_favorite: boolean;
+  photo_url: string | null;
+  logo_url: string | null;
 }
 
 export interface CardFormValues {

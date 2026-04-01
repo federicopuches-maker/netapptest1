@@ -5,6 +5,7 @@ import Link from "next/link";
 import { ArrowLeft, Pencil, Share2 } from "lucide-react";
 import { QRCodeSVG } from "qrcode.react";
 import { CardForm } from "@/components/cards/card-form";
+import { ImageUploadField } from "@/components/cards/image-upload-field";
 import { ShareSheet } from "@/components/cards/share-sheet";
 import { BusinessCardVisual } from "@/components/cards/business-card-visual";
 import { useAuth } from "@/contexts/auth-context";
@@ -129,6 +130,25 @@ export default function CardDetailPage({ params }: PageProps) {
 
         {isEditing ? (
           <div className="p-4 flex flex-col gap-6">
+            {/* Image uploads */}
+            <div className="flex gap-8 justify-center py-2">
+              <ImageUploadField
+                cardId={card.id}
+                field="photo_url"
+                currentUrl={card.photo_url ?? null}
+                shape="circle"
+                label="Photo"
+                onUploaded={(url) => setCard((c) => c ? { ...c, photo_url: url } : c)}
+              />
+              <ImageUploadField
+                cardId={card.id}
+                field="logo_url"
+                currentUrl={card.logo_url ?? null}
+                shape="square"
+                label="Logo"
+                onUploaded={(url) => setCard((c) => c ? { ...c, logo_url: url } : c)}
+              />
+            </div>
             {error && <p className="text-sm text-red-500">{error}</p>}
             <CardForm
               initialValues={formValues}

@@ -134,7 +134,7 @@ export default function CardDetailPage({ params }: PageProps) {
         </div>
 
         {isEditing ? (
-          <div className="p-4 flex flex-col gap-6">
+          <div className="p-4 flex flex-col gap-6 pb-28">
             {/* Image uploads */}
             <div className="flex gap-8 justify-center py-2">
               <ImageUploadField

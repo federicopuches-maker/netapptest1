@@ -50,7 +50,7 @@ export function ContactsList({ contacts }: ContactsListProps) {
       </div>
 
       {filtered.length === 0 ? (
-        <p className="text-sm text-black/40 text-center py-12">No results for "{query}"</p>
+        <p className="text-sm text-black/40 text-center py-12">No results for &ldquo;{query}&rdquo;</p>
       ) : (
         <div className="divide-y divide-black/10">
           {filtered.map((c) => (

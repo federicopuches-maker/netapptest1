@@ -63,13 +63,13 @@ export function ShareSheet({ card, username, onClose }: ShareSheetProps) {
     <>
       {/* Overlay */}
       <div
-        className="fixed inset-0 bg-black/40 z-50"
+        className="fixed inset-0 bg-black/40 z-[60]"
         onClick={onClose}
         aria-hidden="true"
       />
 
       {/* Sheet */}
-      <div className="fixed bottom-0 left-0 right-0 bg-white rounded-t-2xl z-50 p-6 pb-[max(1.5rem,env(safe-area-inset-bottom))]">
+      <div className="fixed bottom-0 left-0 right-0 bg-white rounded-t-2xl z-[60] p-6 pb-[max(1.5rem,env(safe-area-inset-bottom))]">
         {/* Drag handle */}
         <div className="w-10 h-1 bg-black/20 rounded-full mx-auto mb-5" />
 
